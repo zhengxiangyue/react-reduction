@@ -19,7 +19,9 @@ class AuthForm extends React.Component {
   };
 
   handleSubmit = event => {
-    event.preventDefault();
+    this.props.loginUser();
+    window.location.href = '/?auth=true';
+    // event.preventDefault();
   };
 
   renderButtonText() {

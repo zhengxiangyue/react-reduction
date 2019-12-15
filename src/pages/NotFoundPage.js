@@ -1,15 +1,12 @@
 import React from 'react';
-
-import { Navbar, Nav, NavItem } from 'reactstrap';
-
-import SourceLink from 'components/SourceLink';
+import {Nav, Navbar, NavItem} from "reactstrap";
 
 const Footer = () => {
   return (
     <Navbar>
       <Nav navbar>
         <NavItem>
-          {/*2018 Reduction theme, source on <SourceLink>Github</SourceLink>*/}
+          404 Not Found <a href='/'>Go to home page</a>
         </NavItem>
       </Nav>
     </Navbar>

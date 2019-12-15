@@ -24,59 +24,72 @@ const ProgressPage = React.lazy(() => import('pages/ProgressPage'));
 const TablePage = React.lazy(() => import('pages/TablePage'));
 const TypographyPage = React.lazy(() => import('pages/TypographyPage'));
 const WidgetPage = React.lazy(() => import('pages/WidgetPage'));
+const NotFoundPage =  React.lazy(() => import('pages/NotFoundPage'));
 
 const getBasename = () => {
   return `/${process.env.PUBLIC_URL.split('/').pop()}`;
 };
 
 class App extends React.Component {
+
+  authenticated() {
+    console.log(window.location.search);
+    return window.location.search === '?auth=true';
+  }
+
+  loginUser() {
+  }
+
+  logoutUser() {
+  }
+
   render() {
+
+    if (!this.authenticated() && window.location.pathname !== '/login') {
+      window.location.href = '/login';
+    }
+
+    if (this.authenticated() && window.location.pathname === '/login') {
+      window.location.href = '/';
+    }
+
     return (
       <BrowserRouter basename={getBasename()}>
         <GAListener>
           <Switch>
-            <LayoutRoute
-              exact
-              path="/login"
-              layout={EmptyLayout}
-              component={props => (
-                <AuthPage {...props} authState={STATE_LOGIN} />
-              )}
-            />
-            <LayoutRoute
-              exact
-              path="/signup"
-              layout={EmptyLayout}
-              component={props => (
-                <AuthPage {...props} authState={STATE_SIGNUP} />
-              )}
-            />
+            {!this.authenticated() &&
+            <LayoutRoute exact path="/login" layout={EmptyLayout}
+                         component={props => (
+                           <AuthPage {...props}
+                                     loginUser={this.loginUser}
+                                     authenticated={this.authenticated}
+                                     authState={STATE_LOGIN}/>)}/>
+            }
 
-            <MainLayout breakpoint={this.props.breakpoint}>
-              <React.Suspense fallback={<PageSpinner />}>
-                <Route exact path="/" component={DashboardPage} />
-                <Route exact path="/login-modal" component={AuthModalPage} />
-                <Route exact path="/buttons" component={ButtonPage} />
-                <Route exact path="/cards" component={CardPage} />
-                <Route exact path="/widgets" component={WidgetPage} />
-                <Route exact path="/typography" component={TypographyPage} />
-                <Route exact path="/alerts" component={AlertPage} />
-                <Route exact path="/tables" component={TablePage} />
-                <Route exact path="/badges" component={BadgePage} />
-                <Route
-                  exact
-                  path="/button-groups"
-                  component={ButtonGroupPage}
-                />
-                <Route exact path="/dropdowns" component={DropdownPage} />
-                <Route exact path="/progress" component={ProgressPage} />
-                <Route exact path="/modals" component={ModalPage} />
-                <Route exact path="/forms" component={FormPage} />
-                <Route exact path="/input-groups" component={InputGroupPage} />
-                <Route exact path="/charts" component={ChartPage} />
+            {this.authenticated() &&
+            <MainLayout breakpoint={this.props.breakpoint} logoutUser={this.logoutUser}>
+              <React.Suspense fallback={<PageSpinner/>}>
+                <Route exact path="/" component={DashboardPage}/>
+                <Route exact path="/login-modal" component={AuthModalPage}/>
+                <Route exact path="/buttons" component={ButtonPage}/>
+                <Route exact path="/cards" component={CardPage}/>
+                <Route exact path="/widgets" component={WidgetPage}/>
+                <Route exact path="/typography" component={TypographyPage}/>
+                <Route exact path="/alerts" component={AlertPage}/>
+                <Route exact path="/tables" component={TablePage}/>
+                <Route exact path="/badges" component={BadgePage}/>
+                <Route exact path="/button-groups" component={ButtonGroupPage}/>
+
+                <Route exact path="/dropdowns" component={DropdownPage}/>
+                <Route exact path="/progress" component={ProgressPage}/>
+                <Route exact path="/modals" component={ModalPage}/>
+                <Route exact path="/forms" component={FormPage}/>
+                <Route exact path="/input-groups" component={InputGroupPage}/>
+                <Route exact path="/charts" component={ChartPage}/>
+                {/*<Route component={NotFoundPage}/>*/}
               </React.Suspense>
             </MainLayout>
-            <Redirect to="/" />
+            }
           </Switch>
         </GAListener>
       </BrowserRouter>
@@ -108,4 +121,4 @@ const query = ({ width }) => {
   return { breakpoint: 'xs' };
 };
 
-export default componentQueries(query)(App);
+export default App;

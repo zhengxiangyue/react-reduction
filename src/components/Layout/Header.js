@@ -75,6 +75,10 @@ class Header extends React.Component {
     document.querySelector('.cr-sidebar').classList.toggle('cr-sidebar--open');
   };
 
+  clickSignout() {
+    window.location.href = '/';
+  }
+
   render() {
     const { isNotificationConfirmed } = this.state;
 
@@ -157,7 +161,7 @@ class Header extends React.Component {
                       <MdHelp /> Help
                     </ListGroupItem>
                     <ListGroupItem tag="button" action className="border-light">
-                      <MdExitToApp /> Signout
+                      <MdExitToApp /> <span onClick={this.clickSignout}>Signout</span>
                     </ListGroupItem>
                   </ListGroup>
                 </UserCard>
